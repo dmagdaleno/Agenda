@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +36,10 @@ public class AlunoDAO extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insere(Aluno aluno)  {
+    public void insere(@NotNull Aluno aluno)  {
         SQLiteDatabase db = getWritableDatabase();
 
-        ContentValues dados = new ContentValues();
-        dados.put("nome", aluno.getNome());
-        dados.put("endereco", aluno.getEndereco());
-        dados.put("telefone", aluno.getTelefone());
-        dados.put("site", aluno.getSite());
-        dados.put("nota", aluno.getNota());
+        ContentValues dados = pegaDadosDoAluno(aluno);
 
         db.insert("Alunos", null, dados );
     }
@@ -53,18 +51,44 @@ public class AlunoDAO extends SQLiteOpenHelper {
 
         List<Aluno> alunos = new ArrayList<Aluno>();
         while (c.moveToNext()) {
-            Aluno aluno = new Aluno();
-            aluno.setId(c.getLong(c.getColumnIndex("id")));
-            aluno.setNome(c.getString(c.getColumnIndex("nome")));
-            aluno.setEndereco(c.getString(c.getColumnIndex("endereco")));
-            aluno.setTelefone(c.getString(c.getColumnIndex("telefone")));
-            aluno.setSite(c.getString(c.getColumnIndex("site")));
-            aluno.setNota(c.getDouble(c.getColumnIndex("nota")));
+            Long id = c.getLong(c.getColumnIndex("id"));
+            String nome = c.getString(c.getColumnIndex("nome"));
+            String endereco = c.getString(c.getColumnIndex("endereco"));
+            String telefone = c.getString(c.getColumnIndex("telefone"));
+            String site = c.getString(c.getColumnIndex("site"));
+            Double nota = c.getDouble(c.getColumnIndex("nota"));
+            Aluno aluno = new Aluno(id, nome, endereco, telefone, site, nota);
             alunos.add(aluno);
         }
         c.close();
 
         return alunos;
 
+    }
+
+    public void remover(@NotNull Aluno aluno) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String [] params = {String.valueOf(aluno.getId())};
+        db.delete("Alunos", "id = ?", params);
+    }
+
+    public void altera(@NotNull Aluno aluno) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues dados = pegaDadosDoAluno(aluno);
+
+        String[] params ={aluno.getId().toString()};
+        db.update("Alunos", dados, "id = ?", params);
+    }
+
+    @NonNull
+    private ContentValues pegaDadosDoAluno(Aluno aluno) {
+        ContentValues dados = new ContentValues();
+        dados.put("nome", aluno.getNome()); dados.put("endereco", aluno.getEndereco());
+        dados.put("telefone", aluno.getTelefone());
+        dados.put("site", aluno.getSite());
+        dados.put("nota", aluno.getNota());
+        return dados;
     }
 }
