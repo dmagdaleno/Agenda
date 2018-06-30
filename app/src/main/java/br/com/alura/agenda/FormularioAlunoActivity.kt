@@ -5,6 +5,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import br.com.alura.modelo.Aluno
+import kotlinx.android.synthetic.main.activity_formulario_aluno.*
+import br.com.alura.dao.AlunoDAO
+
+
 
 class FormularioAlunoActivity : AppCompatActivity() {
 
@@ -26,8 +31,24 @@ class FormularioAlunoActivity : AppCompatActivity() {
     }
 
     fun salvaAluno() {
-        Toast.makeText(this, "Aluno salvo", Toast.LENGTH_SHORT).show()
+        var aluno: Aluno = constroiAluno()
+        val dao = AlunoDAO(this)
+        dao.insere(aluno)
+        dao.close()
+
+        Toast.makeText(this, "Aluno " + aluno.nome + " salvo", Toast.LENGTH_SHORT).show()
         finish()
+    }
+
+    private fun constroiAluno(): Aluno {
+        var aluno = Aluno()
+        aluno.nome = nome.text.toString()
+        aluno.endereco = endereco.text.toString()
+        aluno.telefone = telefone.text.toString()
+        aluno.site = site.text.toString()
+        aluno.nota = nota.progress.toDouble()
+
+        return aluno
     }
 
 }
