@@ -13,9 +13,26 @@ import br.com.alura.dao.AlunoDAO
 
 class FormularioAlunoActivity : AppCompatActivity() {
 
+
+    private var aluno: Aluno? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_formulario_aluno)
+
+        val extra = intent.getSerializableExtra("aluno")
+        if(extra != null && extra is Aluno) {
+            aluno = extra
+            preencheFormulario(aluno!!)
+        }
+    }
+
+    private fun preencheFormulario(aluno: Aluno) {
+        nome.setText(aluno.nome)
+        endereco.setText(aluno.endereco)
+        telefone.setText(aluno.telefone)
+        site.setText(aluno.site)
+        nota.progress = aluno.nota.toInt()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -31,9 +48,13 @@ class FormularioAlunoActivity : AppCompatActivity() {
     }
 
     fun salvaAluno() {
-        var aluno: Aluno = constroiAluno()
+        val aluno: Aluno = constroiAluno()
         val dao = AlunoDAO(this)
-        dao.insere(aluno)
+        if (aluno.id != null)  {
+            dao.altera(aluno)
+        } else {
+            dao.insere(aluno)
+        }
         dao.close()
 
         Toast.makeText(this, "Aluno " + aluno.nome + " salvo", Toast.LENGTH_SHORT).show()
@@ -41,14 +62,23 @@ class FormularioAlunoActivity : AppCompatActivity() {
     }
 
     private fun constroiAluno(): Aluno {
-        var aluno = Aluno()
-        aluno.nome = nome.text.toString()
-        aluno.endereco = endereco.text.toString()
-        aluno.telefone = telefone.text.toString()
-        aluno.site = site.text.toString()
-        aluno.nota = nota.progress.toDouble()
+        val fnome     = nome.text    .toString()
+        val fendereco = endereco.text.toString()
+        val ftelefone = telefone.text.toString()
+        val fsite     = site.text    .toString()
+        val fnota     = nota.progress.toDouble()
 
-        return aluno
+        if(aluno != null) {
+            aluno!!.nome = fnome
+            aluno!!.endereco = fendereco
+            aluno!!.telefone = ftelefone
+            aluno!!.site = fsite
+            aluno!!.nota = fnota
+        } else {
+            aluno = Aluno(null, fnome, fendereco, ftelefone, fsite, fnota)
+        }
+
+        return aluno!!
     }
 
 }
