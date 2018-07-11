@@ -10,11 +10,9 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_lista_aluno.*
-import br.com.alura.modelo.Aluno
 import br.com.alura.dao.AlunoDAO
-
-
+import br.com.alura.modelo.Aluno
+import kotlinx.android.synthetic.main.activity_lista_aluno.*
 
 class ListaAlunoActivity : AppCompatActivity() {
 
