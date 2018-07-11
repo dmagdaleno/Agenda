@@ -9,8 +9,6 @@ import br.com.alura.modelo.Aluno
 import kotlinx.android.synthetic.main.activity_formulario_aluno.*
 import br.com.alura.dao.AlunoDAO
 
-
-
 class FormularioAlunoActivity : AppCompatActivity() {
 
 
