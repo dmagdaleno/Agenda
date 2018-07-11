@@ -2,6 +2,7 @@ package br.com.alura.agenda
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.ContextMenu
@@ -59,22 +60,47 @@ class ListaAlunoActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenu.ContextMenuInfo) {
+    override fun onCreateContextMenu(menu: ContextMenu, v: View?,
+                                     menuInfo: ContextMenu.ContextMenuInfo) {
+
         super.onCreateContextMenu(menu, v, menuInfo)
+        val aluno = alunoSelecionado(menuInfo)
+
+        val abrirSite: MenuItem = menu.add("Abrir site")
+        abrirSite.setOnMenuItemClickListener{ abrirSite(aluno, it) }
+
         val remover: MenuItem = menu.add("Remover")
-        remover.setOnMenuItemClickListener{ removerItem(menuInfo) }
+        remover.setOnMenuItemClickListener{ remover(aluno) }
     }
 
-    fun removerItem(info: Any): Boolean {
-        if(info !is AdapterView.AdapterContextMenuInfo) return false
-        val alunoSelecionado = pegaAlunoDaLista(info.position)
+    private fun alunoSelecionado(menuInfo: ContextMenu.ContextMenuInfo): Aluno {
+        val info = menuInfo as AdapterView.AdapterContextMenuInfo
+        return pegaAlunoDaLista(info.position)
+    }
+
+    fun remover(aluno: Aluno): Boolean {
         val dao = AlunoDAO(this)
-        dao.remover(alunoSelecionado)
+        dao.remover(aluno)
         dao.close()
 
         carregaListaAlunos()
 
         return false
+    }
+
+    fun abrirSite(aluno: Aluno, menuItem: MenuItem): Boolean {
+        intent = Intent(Intent.ACTION_VIEW)
+        intent.data = httpUrl(aluno.site!!)
+        menuItem.intent = intent
+
+        return false
+    }
+
+    private fun httpUrl(url: String): Uri {
+        if(url.startsWith("http://"))
+            return Uri.parse(url)
+
+        return Uri.parse("http://$url")
     }
 
 
