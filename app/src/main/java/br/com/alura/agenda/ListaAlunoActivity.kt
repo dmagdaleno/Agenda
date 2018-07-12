@@ -154,5 +154,10 @@ class ListaAlunoActivity : AppCompatActivity() {
         else throw IllegalArgumentException()
     }
 
-    
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if(requestCode == CALL_REQ_CODE) efetuaLigacao(ultimoTelefone)
+    }
 }
