@@ -66,6 +66,10 @@ class ListaAlunoActivity : AppCompatActivity() {
         super.onCreateContextMenu(menu, v, menuInfo)
         val aluno = alunoSelecionado(menuInfo)
 
+        val itemSMS = menu.add("Enviar SMS")
+        val uri = "sms:" + aluno.telefone
+        itemSMS.setOnMenuItemClickListener { abrirView(Uri.parse(uri), it) }
+
         val itemMapa = menu.add("Visualizar no mapa")
         val uriMapa = "geo:0,0?q=" + aluno.endereco
         itemMapa.setOnMenuItemClickListener { abrirView(Uri.parse(uriMapa), it) }
