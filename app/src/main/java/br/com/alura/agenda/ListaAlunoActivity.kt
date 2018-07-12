@@ -1,9 +1,12 @@
 package br.com.alura.agenda
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.ContextMenu
 import android.view.MenuItem
@@ -16,6 +19,10 @@ import br.com.alura.modelo.Aluno
 import kotlinx.android.synthetic.main.activity_lista_aluno.*
 
 class ListaAlunoActivity : AppCompatActivity() {
+
+    private val CALL_REQ_CODE = 1
+
+    private var ultimoTelefone: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,13 +92,29 @@ class ListaAlunoActivity : AppCompatActivity() {
     }
 
     private fun ligarPara(aluno: Aluno): Boolean {
+        val permissao = Manifest.permission.CALL_PHONE
+        if (appTemPermissaoPara(permissao)){
+            efetuaLigacao(aluno.telefone!!)
+        } else {
+            val permissoes = arrayOf(permissao)
+            ultimoTelefone = aluno.telefone!!
+            ActivityCompat.requestPermissions(this, permissoes, CALL_REQ_CODE)
+        }
+
+
+        return false
+    }
+
+    private fun efetuaLigacao(telefone: String) {
         intent = Intent(Intent.ACTION_CALL)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.data = Uri.parse("tel:${aluno.telefone}")
+        intent.data = Uri.parse("tel:$telefone")
         startActivity(intent)
-
-        return false;
     }
+
+    private fun appTemPermissaoPara(permission: String) =
+            (ActivityCompat.checkSelfPermission(this, permission)
+                    == PackageManager.PERMISSION_GRANTED)
 
     private fun alunoSelecionado(menuInfo: ContextMenu.ContextMenuInfo): Aluno {
         val info = menuInfo as AdapterView.AdapterContextMenuInfo
@@ -130,4 +153,6 @@ class ListaAlunoActivity : AppCompatActivity() {
         if(itemNaPosicao is Aluno) return itemNaPosicao
         else throw IllegalArgumentException()
     }
+
+    
 }
