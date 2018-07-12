@@ -66,6 +66,10 @@ class ListaAlunoActivity : AppCompatActivity() {
         super.onCreateContextMenu(menu, v, menuInfo)
         val aluno = alunoSelecionado(menuInfo)
 
+        val itemMapa = menu.add("Visualizar no mapa")
+        val uriMapa = "geo:0,0?q=" + aluno.endereco
+        itemMapa.setOnMenuItemClickListener { abrirView(Uri.parse(uriMapa), it) }
+
         val itemSite: MenuItem = menu.add("Abrir site")
         itemSite.setOnMenuItemClickListener{ abrirView(httpUrl(aluno.site!!), it) }
 
