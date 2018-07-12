@@ -66,12 +66,15 @@ class ListaAlunoActivity : AppCompatActivity() {
         super.onCreateContextMenu(menu, v, menuInfo)
         val aluno = alunoSelecionado(menuInfo)
 
+        val itemLigar = menu.add("Ligar")
+        itemLigar.setOnMenuItemClickListener { ligarPara(aluno) }
+
         val itemSMS = menu.add("Enviar SMS")
-        val uri = "sms:" + aluno.telefone
+        val uri = "sms:${aluno.telefone}"
         itemSMS.setOnMenuItemClickListener { abrirView(Uri.parse(uri), it) }
 
         val itemMapa = menu.add("Visualizar no mapa")
-        val uriMapa = "geo:0,0?q=" + aluno.endereco
+        val uriMapa = "geo:0,0?q=${aluno.endereco}"
         itemMapa.setOnMenuItemClickListener { abrirView(Uri.parse(uriMapa), it) }
 
         val itemSite: MenuItem = menu.add("Abrir site")
@@ -79,6 +82,15 @@ class ListaAlunoActivity : AppCompatActivity() {
 
         val remover: MenuItem = menu.add("Remover")
         remover.setOnMenuItemClickListener{ remover(aluno) }
+    }
+
+    private fun ligarPara(aluno: Aluno): Boolean {
+        intent = Intent(Intent.ACTION_CALL)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.data = Uri.parse("tel:${aluno.telefone}")
+        startActivity(intent)
+
+        return false;
     }
 
     private fun alunoSelecionado(menuInfo: ContextMenu.ContextMenuInfo): Aluno {
