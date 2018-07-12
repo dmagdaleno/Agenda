@@ -66,8 +66,8 @@ class ListaAlunoActivity : AppCompatActivity() {
         super.onCreateContextMenu(menu, v, menuInfo)
         val aluno = alunoSelecionado(menuInfo)
 
-        val abrirSite: MenuItem = menu.add("Abrir site")
-        abrirSite.setOnMenuItemClickListener{ abrirSite(aluno, it) }
+        val itemSite: MenuItem = menu.add("Abrir site")
+        itemSite.setOnMenuItemClickListener{ abrirView(httpUrl(aluno.site!!), it) }
 
         val remover: MenuItem = menu.add("Remover")
         remover.setOnMenuItemClickListener{ remover(aluno) }
@@ -88,9 +88,10 @@ class ListaAlunoActivity : AppCompatActivity() {
         return false
     }
 
-    fun abrirSite(aluno: Aluno, menuItem: MenuItem): Boolean {
+    fun abrirView(uri: Uri, menuItem: MenuItem): Boolean {
         intent = Intent(Intent.ACTION_VIEW)
-        intent.data = httpUrl(aluno.site!!)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.data = uri
         menuItem.intent = intent
 
         return false
