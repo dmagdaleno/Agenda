@@ -1,13 +1,17 @@
 package br.com.alura.agenda
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import br.com.alura.dao.AlunoDAO
 import br.com.alura.modelo.Aluno
 import kotlinx.android.synthetic.main.activity_formulario_aluno.*
-import br.com.alura.dao.AlunoDAO
+import java.io.File
 
 class FormularioAlunoActivity : AppCompatActivity() {
 
@@ -23,6 +27,22 @@ class FormularioAlunoActivity : AppCompatActivity() {
             aluno = extra
             preencheFormulario(aluno!!)
         }
+
+        btnFoto.setOnClickListener{ tiraFoto() }
+    }
+
+    private fun tiraFoto() {
+        val caminhoFoto = "${getExternalFilesDir(null).toString()}/${System.currentTimeMillis()}.jpg"
+        val arquivoFoto = File(caminhoFoto)
+
+        val uri = FileProvider.getUriForFile(this,
+                "${applicationContext.packageName}.provider", arquivoFoto)
+
+        val intentCamera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        intentCamera.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+        startActivity(intentCamera)
     }
 
     private fun preencheFormulario(aluno: Aluno) {
