@@ -11,18 +11,29 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
     companion object {
         private val DB_NAME = "Agenda"
-        private val DB_VERSION = 2
+        private val DB_VERSION = 3
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val sql = "CREATE TABLE Alunos (id INTEGER PRIMARY KEY, nome TEXT NOT NULL, endereco TEXT, telefone TEXT, site TEXT, nota REAL);"
+        val sql = "CREATE TABLE Alunos (" +
+                    "id INTEGER PRIMARY KEY, " +
+                    "nome TEXT NOT NULL, " +
+                    "endereco TEXT, " +
+                    "telefone TEXT, " +
+                    "site TEXT, " +
+                    "nota REAL, " +
+                    "foto TEXT);"
         db?.execSQL(sql)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        val sql = "DROP TABLE IF EXISTS Alunos"
+        val sql: String =
+            when(oldVersion){
+                2,3 -> "ALTER TABLE Alunos ADD COLUMN foto TEXT"
+                else -> ""
+            }
+
         db?.execSQL(sql)
-        onCreate(db)
     }
 
     fun insere(aluno: Aluno) {
@@ -46,7 +57,8 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             val telefone = c.getString(c.getColumnIndex("telefone"))
             val site = c.getString(c.getColumnIndex("site"))
             val nota = c.getDouble(c.getColumnIndex("nota"))
-            val aluno = Aluno(id, nome, endereco, telefone, site, nota)
+            val foto = c.getString(c.getColumnIndex("foto"))
+            val aluno = Aluno(id, nome, endereco, telefone, site, nota, foto)
             alunos.add(aluno)
         }
         c.close()
@@ -62,12 +74,12 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.delete("Alunos", "id = ?", params)
     }
 
-    fun altera(aluno: Aluno) {
+    fun altera(id: Long, aluno: Aluno) {
         val db = writableDatabase
 
         val dados = pegaDadosDoAluno(aluno)
 
-        val params = arrayOf(aluno.id!!.toString())
+        val params = arrayOf(id.toString())
         db.update("Alunos", dados, "id = ?", params)
     }
 
@@ -78,6 +90,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         dados.put("telefone", aluno.telefone)
         dados.put("site", aluno.site)
         dados.put("nota", aluno.nota)
+        dados.put("foto", aluno.foto)
         return dados
     }
 }
