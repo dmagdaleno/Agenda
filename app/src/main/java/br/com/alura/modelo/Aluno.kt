@@ -8,7 +8,8 @@ data class Aluno (
     val endereco: String,
     val telefone: String,
     val site: String,
-    val nota: Double ): Serializable {
+    val nota: Double,
+    val foto: String?): Serializable {
 
         override fun toString(): String {
             return id.toString() + " - " + nome
