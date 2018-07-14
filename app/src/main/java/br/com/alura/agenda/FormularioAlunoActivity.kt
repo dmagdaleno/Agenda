@@ -52,15 +52,18 @@ class FormularioAlunoActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == RequestCode.CAMERA){
-                dirFoto?.let {
-                    val bitmap: Bitmap = Bitmap.createScaledBitmap(
-                            BitmapFactory.decodeFile(dirFoto), 300, 300, true)
-
-                    imgFoto.setImageBitmap(bitmap)
-                    imgFoto.scaleType = ImageView.ScaleType.FIT_XY
-                }
+                dirFoto?.let { exibeFoto(it) }
             }
         }
+    }
+
+    private fun exibeFoto(caminhoFoto: String) {
+        val bitmap: Bitmap = Bitmap.createScaledBitmap(
+                BitmapFactory.decodeFile(caminhoFoto), 300, 300, true)
+
+        imgFoto.setImageBitmap(bitmap)
+        imgFoto.scaleType = ImageView.ScaleType.FIT_XY
+        imgFoto.tag = caminhoFoto
     }
 
     private fun preencheFormulario(aluno: Aluno) {
@@ -69,6 +72,7 @@ class FormularioAlunoActivity : AppCompatActivity() {
         telefone.setText(aluno.telefone)
         site.setText(aluno.site)
         nota.progress = aluno.nota.toInt()
+        aluno.foto?.let { exibeFoto(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -87,7 +91,7 @@ class FormularioAlunoActivity : AppCompatActivity() {
         val aluno: Aluno = constroiAluno()
         val dao = AlunoDAO(this)
         if (aluno.id != null)  {
-            dao.altera(aluno)
+            dao.altera(aluno.id, aluno)
         } else {
             dao.insere(aluno)
         }
@@ -103,7 +107,8 @@ class FormularioAlunoActivity : AppCompatActivity() {
             endereco = endereco.text.toString(),
             telefone = telefone.text.toString(),
             site = site.text.toString(),
-            nota = nota.progress.toDouble())
+            nota = nota.progress.toDouble(),
+            foto = imgFoto.tag as String)
 
 }
 
