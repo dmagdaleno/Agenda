@@ -1,39 +1,42 @@
 package br.com.alura.agenda
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.Toast
 import br.com.alura.dao.AlunoDAO
 import br.com.alura.modelo.Aluno
+import br.com.alura.modelo.RequestCode
 import kotlinx.android.synthetic.main.activity_formulario_aluno.*
 import java.io.File
 
 class FormularioAlunoActivity : AppCompatActivity() {
+    private val aluno: Aluno? by lazy {intent.getSerializableExtra("aluno") as Aluno?}
 
-
-    private var aluno: Aluno? = null
+    private var foto: String? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_formulario_aluno)
 
-        val extra = intent.getSerializableExtra("aluno")
-        if(extra != null && extra is Aluno) {
-            aluno = extra
-            preencheFormulario(aluno!!)
-        }
+        if(aluno != null)
+            preencheFormulario(aluno as Aluno)
 
         btnFoto.setOnClickListener{ tiraFoto() }
     }
 
     private fun tiraFoto() {
-        val caminhoFoto = "${getExternalFilesDir(null).toString()}/${System.currentTimeMillis()}.jpg"
-        val arquivoFoto = File(caminhoFoto)
+        foto = "${getExternalFilesDir(null).toString()}/${System.currentTimeMillis()}.jpg"
+
+        val arquivoFoto = File(foto)
 
         val uri = FileProvider.getUriForFile(this,
                 "${applicationContext.packageName}.provider", arquivoFoto)
@@ -42,7 +45,22 @@ class FormularioAlunoActivity : AppCompatActivity() {
         intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, uri)
         intentCamera.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-        startActivity(intentCamera)
+        startActivityForResult(intentCamera, RequestCode.CAMERA)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == RequestCode.CAMERA){
+                foto?.let {
+                    val bitmap: Bitmap = Bitmap.createScaledBitmap(
+                            BitmapFactory.decodeFile(foto), 300, 300, true)
+
+                    imgFoto.setImageBitmap(bitmap)
+                    imgFoto.scaleType = ImageView.ScaleType.FIT_XY
+                }
+            }
+        }
     }
 
     private fun preencheFormulario(aluno: Aluno) {
@@ -75,29 +93,17 @@ class FormularioAlunoActivity : AppCompatActivity() {
         }
         dao.close()
 
-        Toast.makeText(this, "Aluno " + aluno.nome + " salvo", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Aluno ${aluno.nome} salvo", Toast.LENGTH_SHORT).show()
         finish()
     }
 
-    private fun constroiAluno(): Aluno {
-        val fnome     = nome.text    .toString()
-        val fendereco = endereco.text.toString()
-        val ftelefone = telefone.text.toString()
-        val fsite     = site.text    .toString()
-        val fnota     = nota.progress.toDouble()
-
-        if(aluno != null) {
-            aluno!!.nome = fnome
-            aluno!!.endereco = fendereco
-            aluno!!.telefone = ftelefone
-            aluno!!.site = fsite
-            aluno!!.nota = fnota
-        } else {
-            aluno = Aluno(null, fnome, fendereco, ftelefone, fsite, fnota)
-        }
-
-        return aluno!!
-    }
+    private fun constroiAluno() = Aluno(
+            id = aluno?.id,
+            nome = nome.text.toString(),
+            endereco = endereco.text.toString(),
+            telefone = telefone.text.toString(),
+            site = site.text.toString(),
+            nota = nota.progress.toDouble())
 
 }
 
