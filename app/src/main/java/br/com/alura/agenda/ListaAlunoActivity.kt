@@ -16,11 +16,10 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import br.com.alura.dao.AlunoDAO
 import br.com.alura.modelo.Aluno
+import br.com.alura.modelo.RequestCode
 import kotlinx.android.synthetic.main.activity_lista_aluno.*
 
 class ListaAlunoActivity : AppCompatActivity() {
-
-    private val CALL_REQ_CODE = 1
 
     private var ultimoTelefone: String = ""
 
@@ -33,13 +32,9 @@ class ListaAlunoActivity : AppCompatActivity() {
             abrirFormulario(this, aluno)
         }
 
-        botaoSalvar.setOnClickListener{ abrirFormulario(this, null) }
+        botaoSalvar.setOnClickListener { abrirFormulario(this, null) }
 
         registerForContextMenu(listaAluno)
-    }
-
-    private fun toast(mensagem: String, duracao: Int) {
-        Toast.makeText(this, mensagem, duracao).show()
     }
 
     override fun onResume() {
@@ -98,7 +93,7 @@ class ListaAlunoActivity : AppCompatActivity() {
         } else {
             val permissoes = arrayOf(permissao)
             ultimoTelefone = aluno.telefone!!
-            ActivityCompat.requestPermissions(this, permissoes, CALL_REQ_CODE)
+            ActivityCompat.requestPermissions(this, permissoes, RequestCode.CALL)
         }
 
 
@@ -158,6 +153,6 @@ class ListaAlunoActivity : AppCompatActivity() {
                                             grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if(requestCode == CALL_REQ_CODE) efetuaLigacao(ultimoTelefone)
+        if(requestCode == RequestCode.CALL) efetuaLigacao(ultimoTelefone)
     }
 }
