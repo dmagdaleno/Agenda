@@ -21,7 +21,7 @@ import java.io.File
 class FormularioAlunoActivity : AppCompatActivity() {
     private val aluno: Aluno? by lazy {intent.getSerializableExtra("aluno") as Aluno?}
 
-    private var foto: String? = null;
+    private var dirFoto: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +34,9 @@ class FormularioAlunoActivity : AppCompatActivity() {
     }
 
     private fun tiraFoto() {
-        foto = "${getExternalFilesDir(null).toString()}/${System.currentTimeMillis()}.jpg"
+        dirFoto = "${getExternalFilesDir(null).toString()}/${System.currentTimeMillis()}.jpg"
 
-        val arquivoFoto = File(foto)
+        val arquivoFoto = File(dirFoto)
 
         val uri = FileProvider.getUriForFile(this,
                 "${applicationContext.packageName}.provider", arquivoFoto)
@@ -52,9 +52,9 @@ class FormularioAlunoActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == RequestCode.CAMERA){
-                foto?.let {
+                dirFoto?.let {
                     val bitmap: Bitmap = Bitmap.createScaledBitmap(
-                            BitmapFactory.decodeFile(foto), 300, 300, true)
+                            BitmapFactory.decodeFile(dirFoto), 300, 300, true)
 
                     imgFoto.setImageBitmap(bitmap)
                     imgFoto.scaleType = ImageView.ScaleType.FIT_XY
