@@ -1,4 +1,4 @@
-package br.com.alura.agenda
+package br.com.alura.agenda.ui
 
 import android.Manifest
 import android.content.Context
@@ -13,10 +13,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
-import br.com.alura.dao.AlunoDAO
-import br.com.alura.modelo.Aluno
-import br.com.alura.modelo.RequestCode
+import br.com.alura.agenda.R
+import br.com.alura.agenda.dao.AlunoDAO
+import br.com.alura.agenda.modelo.Aluno
+import br.com.alura.agenda.modelo.RequestCode
 import kotlinx.android.synthetic.main.activity_lista_aluno.*
 
 class ListaAlunoActivity : AppCompatActivity() {

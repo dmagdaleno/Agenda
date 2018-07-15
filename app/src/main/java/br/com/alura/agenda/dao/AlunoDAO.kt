@@ -1,10 +1,10 @@
-package br.com.alura.dao
+package br.com.alura.agenda.dao
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import br.com.alura.modelo.Aluno
+import br.com.alura.agenda.modelo.Aluno
 import java.util.ArrayList
 
 class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {

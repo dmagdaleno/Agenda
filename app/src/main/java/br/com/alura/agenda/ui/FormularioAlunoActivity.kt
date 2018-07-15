@@ -1,4 +1,4 @@
-package br.com.alura.agenda
+package br.com.alura.agenda.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -12,9 +12,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
-import br.com.alura.dao.AlunoDAO
-import br.com.alura.modelo.Aluno
-import br.com.alura.modelo.RequestCode
+import br.com.alura.agenda.R
+import br.com.alura.agenda.dao.AlunoDAO
+import br.com.alura.agenda.modelo.Aluno
+import br.com.alura.agenda.modelo.RequestCode
 import kotlinx.android.synthetic.main.activity_formulario_aluno.*
 import java.io.File
 
