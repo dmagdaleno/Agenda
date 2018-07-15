@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/itemTelefone"
             android:text="Telefone"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:paddingLeft="10dp"
             android:paddingTop="8dp"/>
