@@ -17,6 +17,7 @@ import br.com.alura.agenda.R
 import br.com.alura.agenda.dao.AlunoDAO
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
+import br.com.alura.agenda.ui.adapter.AlunoAdapter
 import kotlinx.android.synthetic.main.activity_lista_aluno.*
 
 class ListaAlunoActivity : AppCompatActivity() {
@@ -48,10 +49,7 @@ class ListaAlunoActivity : AppCompatActivity() {
         System.out.println(alunos)
         dao.close ()
 
-        val adapter = ArrayAdapter<Aluno>(
-                this,
-                android.R.layout.simple_list_item_1,
-                alunos)
+        val adapter = AlunoAdapter(this, alunos)
 
         listaAluno.adapter = adapter
     }
