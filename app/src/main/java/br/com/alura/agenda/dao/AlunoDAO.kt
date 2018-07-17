@@ -83,6 +83,14 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.update("Alunos", dados, "id = ?", params)
     }
 
+    fun existeAlunoCom(telefone: String): Boolean {
+        val db = readableDatabase
+        val c = db.rawQuery("SELECT * FROM Alunos WHERE telefone = ?", arrayOf(telefone))
+        val resultados = c.count
+        c.close()
+        return resultados > 0
+    }
+
     private fun pegaDadosDoAluno(aluno: Aluno): ContentValues {
         val dados = ContentValues()
         dados.put("nome", aluno.nome)
