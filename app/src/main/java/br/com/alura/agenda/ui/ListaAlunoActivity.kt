@@ -9,10 +9,12 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.ContextMenu
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import br.com.alura.agenda.R
 import br.com.alura.agenda.dao.AlunoDAO
 import br.com.alura.agenda.modelo.Aluno
@@ -54,6 +56,20 @@ class ListaAlunoActivity : AppCompatActivity() {
         listaAluno.adapter = adapter
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_lista_aluno, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.menu_enviar_notas -> {
+                Toast.makeText(this, "Enviando notas...", Toast.LENGTH_LONG).show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     fun abrirFormulario(ctx: Context, aluno: Aluno?) {
         val intent = Intent(ctx, FormularioAlunoActivity::class.java)
         intent.putExtra("aluno", aluno)
@@ -93,7 +109,6 @@ class ListaAlunoActivity : AppCompatActivity() {
             ultimoTelefone = aluno.telefone!!
             ActivityCompat.requestPermissions(this, permissoes, RequestCode.CALL)
         }
-
 
         return false
     }
