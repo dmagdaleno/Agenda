@@ -25,6 +25,13 @@ class AlunoAdapter(
         view.itemTelefone.text = aluno.telefone
         exibeFoto(view, aluno)
 
+        view.itemEndereco?.let{
+            it.text = aluno.endereco
+        }
+        view.itemSite?.let{
+            it.text = aluno.site
+        }
+
         return view
     }
 
