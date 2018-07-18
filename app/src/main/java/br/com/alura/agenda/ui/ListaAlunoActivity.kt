@@ -16,6 +16,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import br.com.alura.agenda.R
+import br.com.alura.agenda.api.AlunoConverter
+import br.com.alura.agenda.api.EnviaAlunoTask
+import br.com.alura.agenda.api.WebClient
 import br.com.alura.agenda.dao.AlunoDAO
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
@@ -64,7 +67,7 @@ class ListaAlunoActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.menu_enviar_notas -> {
-                Toast.makeText(this, "Enviando notas...", Toast.LENGTH_LONG).show()
+                EnviaAlunoTask(this).execute()
             }
         }
         return super.onOptionsItemSelected(item)
