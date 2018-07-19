@@ -1,4 +1,4 @@
-package br.com.alura.agenda.ui
+package br.com.alura.agenda.ui.activity
 
 import android.Manifest
 import android.content.Context

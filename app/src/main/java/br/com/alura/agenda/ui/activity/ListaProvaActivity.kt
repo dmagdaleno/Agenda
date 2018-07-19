@@ -1,4 +1,4 @@
-package br.com.alura.agenda.ui
+package br.com.alura.agenda.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +10,6 @@ import kotlinx.android.synthetic.main.activity_lista_prova.*
 
 class ListaProvaActivity : AppCompatActivity() {
 
-    val provas: MutableList<Prova> = mutableListOf()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_prova)
@@ -22,9 +20,10 @@ class ListaProvaActivity : AppCompatActivity() {
         val topicos2 = listOf("Equacoes de segundo grau", "Trigonometria")
         val prova2 = Prova("Matematica", "27/05/2016", topicos2)
 
-        provas.addAll(listOf(prova1, prova2))
+        val provas = listOf(prova1, prova2)
 
-        val adapter = ArrayAdapter<Prova>(this, android.R.layout.simple_list_item_1, provas)
+        val adapter = ArrayAdapter<Prova>(
+                this, android.R.layout.simple_list_item_1, provas)
 
         listaProva.adapter = adapter
         

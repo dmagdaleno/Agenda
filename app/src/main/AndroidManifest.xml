@@ -23,14 +23,14 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".ui.ListaAlunoActivity">
+        <activity android:name=".ui.activity.ListaAlunoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.FormularioAlunoActivity" />
+        <activity android:name=".ui.activity.FormularioAlunoActivity" />
 
         <receiver android:name=".receiver.SMSReceiver">
             <intent-filter>
@@ -38,8 +38,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.ListaProvaActivity" />
-        <activity android:name=".ui.ProvaActivity"></activity>
+        <activity android:name=".ui.activity.ListaProvaActivity" />
+        <activity android:name=".ui.activity.ProvaActivity"></activity>
     </application>
 
 </manifest>
