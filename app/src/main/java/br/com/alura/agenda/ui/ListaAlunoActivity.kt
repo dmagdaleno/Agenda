@@ -13,12 +13,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
 import br.com.alura.agenda.R
-import br.com.alura.agenda.api.AlunoConverter
 import br.com.alura.agenda.api.EnviaAlunoTask
-import br.com.alura.agenda.api.WebClient
 import br.com.alura.agenda.dao.AlunoDAO
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
@@ -68,6 +64,10 @@ class ListaAlunoActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.menu_enviar_notas -> {
                 EnviaAlunoTask(this).execute()
+            }
+            R.id.menu_carregar_provas -> {
+                val intent = Intent(this, ListaProvaActivity::class.java)
+                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -165,7 +165,8 @@ class ListaAlunoActivity : AppCompatActivity() {
         else throw IllegalArgumentException()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
                                             grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
