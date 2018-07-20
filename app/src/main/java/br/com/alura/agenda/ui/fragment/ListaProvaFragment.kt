@@ -1,6 +1,5 @@
 package br.com.alura.agenda.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import br.com.alura.agenda.R
 import br.com.alura.agenda.modelo.Prova
-import br.com.alura.agenda.ui.activity.ProvaActivity
+import br.com.alura.agenda.ui.activity.ListaProvaActivity
 import kotlinx.android.synthetic.main.fragment_lista_prova.view.*
 
 class ListaProvaFragment: Fragment() {
@@ -35,9 +34,8 @@ class ListaProvaFragment: Fragment() {
 
         view.listaProva.setOnItemClickListener { parent, _, posicao, _ ->
             val prova: Prova = parent.getItemAtPosition(posicao) as Prova
-            val intent = Intent(context, ProvaActivity::class.java)
-            intent.putExtra("prova", prova)
-            startActivity(intent)
+            val listaProvaActivity = activity as ListaProvaActivity
+            listaProvaActivity.selecionaProva(prova)
         }
 
         return view
