@@ -30,7 +30,6 @@ class ProvaFragment : Fragment() {
         listaTopicos = view.provaListaTopico
 
         val prova = arguments?.getSerializable("prova") as Prova?
-        println(prova)
         prova?.let { populaCamposCom(it) }
 
         return view
