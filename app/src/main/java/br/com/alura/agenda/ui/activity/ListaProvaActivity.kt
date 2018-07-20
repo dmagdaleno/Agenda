@@ -39,6 +39,7 @@ class ListaProvaActivity : AppCompatActivity() {
             provaFragment.setArguments(parametros)
 
             tx.replace(R.id.frame_principal, provaFragment)
+            tx.addToBackStack(null)
             tx.commit()
         }
     }
