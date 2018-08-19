@@ -13,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import br.com.alura.agenda.MapaActivity
 import br.com.alura.agenda.R
 import br.com.alura.agenda.api.EnviaAlunoTask
 import br.com.alura.agenda.dao.AlunoDAO
@@ -29,7 +30,7 @@ class ListaAlunoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_aluno)
 
-        listaAluno.setOnItemClickListener { parent, view, position, id ->
+        listaAluno.setOnItemClickListener { _, _, position, _ ->
             val aluno: Aluno = pegaAlunoDaLista(position)
             abrirFormulario(this, aluno)
         }
@@ -69,6 +70,10 @@ class ListaAlunoActivity : AppCompatActivity() {
                 val intent = Intent(this, ListaProvaActivity::class.java)
                 startActivity(intent)
             }
+            R.id.menu_mapa -> {
+                val intent = Intent(this, MapaActivity::class.java)
+                startActivity(intent)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -97,7 +102,7 @@ class ListaAlunoActivity : AppCompatActivity() {
         itemMapa.setOnMenuItemClickListener { abrirView(Uri.parse(uriMapa), it) }
 
         val itemSite: MenuItem = menu.add("Abrir site")
-        itemSite.setOnMenuItemClickListener{ abrirView(httpUrl(aluno.site!!), it) }
+        itemSite.setOnMenuItemClickListener{ abrirView(httpUrl(aluno.site), it) }
 
         val remover: MenuItem = menu.add("Remover")
         remover.setOnMenuItemClickListener{ remover(aluno) }
@@ -106,10 +111,10 @@ class ListaAlunoActivity : AppCompatActivity() {
     private fun ligarPara(aluno: Aluno): Boolean {
         val permissao = Manifest.permission.CALL_PHONE
         if (appTemPermissaoPara(permissao)){
-            efetuaLigacao(aluno.telefone!!)
+            efetuaLigacao(aluno.telefone)
         } else {
             val permissoes = arrayOf(permissao)
-            ultimoTelefone = aluno.telefone!!
+            ultimoTelefone = aluno.telefone
             ActivityCompat.requestPermissions(this, permissoes, RequestCode.CALL)
         }
 
