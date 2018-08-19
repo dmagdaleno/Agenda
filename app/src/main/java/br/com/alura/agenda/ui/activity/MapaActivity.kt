@@ -1,7 +1,8 @@
-package br.com.alura.agenda
+package br.com.alura.agenda.ui.activity
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import br.com.alura.agenda.R
 import com.google.android.gms.maps.SupportMapFragment
 
 class MapaActivity : AppCompatActivity() {

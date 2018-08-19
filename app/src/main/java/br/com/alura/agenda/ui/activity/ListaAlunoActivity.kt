@@ -13,7 +13,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import br.com.alura.agenda.MapaActivity
 import br.com.alura.agenda.R
 import br.com.alura.agenda.api.EnviaAlunoTask
 import br.com.alura.agenda.dao.AlunoDAO
