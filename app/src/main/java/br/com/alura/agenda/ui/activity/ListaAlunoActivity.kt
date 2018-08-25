@@ -47,7 +47,6 @@ class ListaAlunoActivity : AppCompatActivity() {
     private fun carregaListaAlunos() {
         val dao = AlunoDAO(this)
         val alunos = dao.buscaAlunos()
-        System.out.println(alunos)
         dao.close ()
 
         val adapter = AlunoAdapter(this, alunos)
