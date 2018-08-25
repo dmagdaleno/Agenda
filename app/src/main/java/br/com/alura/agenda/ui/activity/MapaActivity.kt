@@ -1,9 +1,9 @@
 package br.com.alura.agenda.ui.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import br.com.alura.agenda.R
-import com.google.android.gms.maps.SupportMapFragment
+import br.com.alura.agenda.ui.fragment.MapaFragment
 
 class MapaActivity : AppCompatActivity() {
 
@@ -12,7 +12,7 @@ class MapaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_mapa)
 
         val tx = supportFragmentManager.beginTransaction()
-        tx.replace(R.id.frame_mapa, SupportMapFragment())
+        tx.replace(R.id.frame_mapa, MapaFragment())
         tx.commit()
     }
 }
