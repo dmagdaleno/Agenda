@@ -34,7 +34,7 @@ class MapaFragment: SupportMapFragment(), OnMapReadyCallback{
                 googleMap?.addMarker(marcador)
             }
         }
-
+        dao.close()
     }
 
     private fun recuperaPosicaoPelo(endereco: String): LatLng? {
