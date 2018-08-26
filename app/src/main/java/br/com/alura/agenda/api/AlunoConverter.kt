@@ -23,4 +23,18 @@ class AlunoConverter {
         return js.toString()
     }
 
+    fun paraJson(aluno: Aluno): String {
+        val js = JSONStringer()
+
+        js.`object`()
+            .key("nome").value(aluno.nome)
+            .key("endereco").value(aluno.endereco)
+            .key("telefone").value(aluno.telefone)
+            .key("site").value(aluno.site)
+            .key("nota").value(aluno.nota)
+            .endObject()
+
+        return js.toString()
+    }
+
 }
