@@ -3,6 +3,7 @@ package br.com.alura.agenda.ui.fragment
 import android.location.Geocoder
 import android.os.Bundle
 import br.com.alura.agenda.dao.AlunoDAO
+import br.com.alura.agenda.modelo.Localizador
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -22,7 +23,7 @@ class MapaFragment: SupportMapFragment(), OnMapReadyCallback{
             googleMap?.moveCamera(update)
         }
 
-        val dao = AlunoDAO(context!!)
+        val dao = AlunoDAO(thisContext())
         val alunos = dao.buscaAlunos()
         alunos.forEach{ aluno ->
             val posicao = recuperaPosicaoPelo(aluno.endereco)
@@ -35,6 +36,10 @@ class MapaFragment: SupportMapFragment(), OnMapReadyCallback{
             }
         }
         dao.close()
+
+        if (googleMap != null) {
+            Localizador(thisContext(), googleMap)
+        }
     }
 
     private fun recuperaPosicaoPelo(endereco: String): LatLng? {
@@ -45,5 +50,7 @@ class MapaFragment: SupportMapFragment(), OnMapReadyCallback{
 
         return null
     }
+
+    private fun thisContext() = context!!
 
 }
