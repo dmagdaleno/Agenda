@@ -10,12 +10,16 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 class MapaFragment: SupportMapFragment(), OnMapReadyCallback{
 
+    lateinit var mapa: GoogleMap
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getMapAsync(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
+        mapa = googleMap!!
+
         val endereco = "R. Ibitirama, 1409 - Vila Prudente, São Paulo - SP"
         val posicao = recuperaPosicaoPelo(endereco)
         posicao?.let {
@@ -36,10 +40,6 @@ class MapaFragment: SupportMapFragment(), OnMapReadyCallback{
             }
         }
         dao.close()
-
-        if (googleMap != null) {
-            Localizador(thisContext(), googleMap)
-        }
     }
 
     private fun recuperaPosicaoPelo(endereco: String): LatLng? {
@@ -52,5 +52,12 @@ class MapaFragment: SupportMapFragment(), OnMapReadyCallback{
     }
 
     private fun thisContext() = context!!
+
+    fun centralizaEm(coordenada: LatLng) {
+        if(mapa != null){
+            val update = CameraUpdateFactory.newLatLng(coordenada)
+            mapa.moveCamera(update)
+        }
+    }
 
 }
