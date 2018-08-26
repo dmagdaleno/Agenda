@@ -28,7 +28,7 @@ class EnviaAlunoTask(val context: Context): AsyncTask<Unit, Unit, String>() {
         val json = conversor.paraJson(alunos)
 
         val webClient = WebClient()
-        return webClient.post(json)
+        return webClient.envia(json)
     }
 
     override fun onPostExecute(result: String) {
