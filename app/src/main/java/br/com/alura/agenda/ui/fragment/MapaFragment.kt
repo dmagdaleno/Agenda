@@ -3,10 +3,13 @@ package br.com.alura.agenda.ui.fragment
 import android.location.Geocoder
 import android.os.Bundle
 import br.com.alura.agenda.dao.AlunoDAO
-import br.com.alura.agenda.modelo.Localizador
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import java.lang.reflect.InvocationTargetException
 
 class MapaFragment: SupportMapFragment(), OnMapReadyCallback{
 
@@ -43,10 +46,14 @@ class MapaFragment: SupportMapFragment(), OnMapReadyCallback{
     }
 
     private fun recuperaPosicaoPelo(endereco: String): LatLng? {
-        val geocoder = Geocoder(context)
-        val resultados = geocoder.getFromLocationName(endereco, 1)
-        if(!resultados.isEmpty())
-            return LatLng(resultados[0].latitude, resultados[0].longitude)
+        try {
+            val geocoder = Geocoder(context)
+            val resultados = geocoder.getFromLocationName(endereco, 1)
+            if(!resultados.isEmpty())
+                return LatLng(resultados[0].latitude, resultados[0].longitude)
+        } catch (e: InvocationTargetException) {
+            System.out.println("Erro ao recuperar localização: ${e.message}")
+        }
 
         return null
     }
