@@ -23,7 +23,6 @@ class AlunoAdapter(
         val aluno = alunos[position]
         view.itemNome.text = aluno.nome
         view.itemTelefone.text = aluno.telefone
-        exibeFoto(view, aluno)
 
         view.itemEndereco?.let{
             it.text = aluno.endereco
@@ -31,19 +30,19 @@ class AlunoAdapter(
         view.itemSite?.let{
             it.text = aluno.site
         }
+        exibeFoto(view, aluno)
 
         return view
     }
 
     private fun exibeFoto(view: View, aluno: Aluno) {
-        aluno.foto?.let {
+        if(aluno.foto != null) {
+            val bitmap = BitmapFactory.decodeFile(aluno.foto)
+            val bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 100, 100, true)
 
-            val bitmap: Bitmap = Bitmap.createScaledBitmap(
-                    BitmapFactory.decodeFile(it), 100, 100, true)
-
-            view.itemFoto.setImageBitmap(bitmap)
+            view.itemFoto.setImageBitmap(bitmapReduzido)
             view.itemFoto.scaleType = ImageView.ScaleType.FIT_XY
-            view.itemFoto.tag = it
+            view.itemFoto.tag = aluno.foto
         }
     }
 
