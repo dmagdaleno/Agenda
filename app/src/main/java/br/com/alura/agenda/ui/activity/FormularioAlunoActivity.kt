@@ -16,6 +16,7 @@ import br.com.alura.agenda.R
 import br.com.alura.agenda.dao.AlunoDAO
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
+import br.com.alura.agenda.task.InsereAlunoTask
 import kotlinx.android.synthetic.main.activity_formulario_aluno.*
 import java.io.File
 
@@ -99,6 +100,8 @@ class FormularioAlunoActivity : AppCompatActivity() {
             dao.insere(aluno)
         }
         dao.close()
+
+        InsereAlunoTask(aluno).execute()
 
         Toast.makeText(this, "Aluno ${aluno.nome} salvo", Toast.LENGTH_SHORT).show()
         finish()
