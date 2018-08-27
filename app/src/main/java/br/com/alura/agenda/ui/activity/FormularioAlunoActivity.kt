@@ -2,22 +2,20 @@ package br.com.alura.agenda.ui.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
 import android.widget.Toast
 import br.com.alura.agenda.R
 import br.com.alura.agenda.dao.AlunoDAO
 import br.com.alura.agenda.funcoes.carregaFoto
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
-import br.com.alura.agenda.task.InsereAlunoTask
+import br.com.alura.agenda.retrofit.InsereAlunoCallback
+import br.com.alura.agenda.retrofit.RetrofitInicializador
 import kotlinx.android.synthetic.main.activity_formulario_aluno.*
 import java.io.File
 
@@ -99,7 +97,8 @@ class FormularioAlunoActivity : AppCompatActivity() {
         }
         dao.close()
 
-        InsereAlunoTask(aluno).execute()
+        val call = RetrofitInicializador().alunoService.insere(aluno)
+        call.enqueue(InsereAlunoCallback())
 
         Toast.makeText(this, "Aluno ${aluno.nome} salvo", Toast.LENGTH_SHORT).show()
         finish()
