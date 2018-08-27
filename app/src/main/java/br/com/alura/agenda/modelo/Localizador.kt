@@ -27,7 +27,7 @@ class Localizador(
 
     override fun onConnected(bundle: Bundle?) {
         val request = LocationRequest()
-        //request.smallestDisplacement = 50f
+        request.smallestDisplacement = 50f
         request.interval = 1000
         request.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
