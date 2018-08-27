@@ -19,17 +19,22 @@ class WebClient {
     }
 
     private fun post(endereco: String, json: String): String {
-        val url = URL(endereco)
-        val connection = url.openConnection() as HttpURLConnection
+        try{
+            val url = URL(endereco)
+            val connection = url.openConnection() as HttpURLConnection
 
-        connection.addRequestProperty("Content-type", "application/json")
-        connection.addRequestProperty("Accept", "application/json")
-        connection.doOutput = true
+            connection.addRequestProperty("Content-type", "application/json")
+            connection.addRequestProperty("Accept", "application/json")
+            connection.doOutput = true
 
-        val output = PrintStream(connection.getOutputStream())
-        output.println(json)
+            val output = PrintStream(connection.getOutputStream())
+            output.println(json)
 
-        val scanner = Scanner(connection.getInputStream())
-        return scanner.next()
+            val scanner = Scanner(connection.getInputStream())
+            return scanner.next()
+        } catch (e: Exception) {
+            System.out.println("Erro ao conectar com o servidor: ${e.message}")
+        }
+        return ""
     }
 }
