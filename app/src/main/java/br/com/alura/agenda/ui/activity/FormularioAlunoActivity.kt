@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import br.com.alura.agenda.R
 import br.com.alura.agenda.dao.AlunoDAO
+import br.com.alura.agenda.funcoes.carregaFoto
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
 import br.com.alura.agenda.task.InsereAlunoTask
@@ -61,11 +62,8 @@ class FormularioAlunoActivity : AppCompatActivity() {
 
     private fun exibeFoto(caminhoFoto: String?) {
         if(caminhoFoto != null) {
-            val bitmap = BitmapFactory.decodeFile(caminhoFoto)
-            val bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 100, 100, true)
-
-            imgFoto.setImageBitmap(bitmapReduzido)
-            imgFoto.scaleType = ImageView.ScaleType.FIT_XY
+            val bitmap = carregaFoto(caminhoFoto)
+            imgFoto.setImageBitmap(bitmap)
             imgFoto.tag = caminhoFoto
         }
     }
