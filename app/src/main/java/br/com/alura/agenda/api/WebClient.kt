@@ -13,11 +13,6 @@ class WebClient {
         return post(endereco, json)
     }
 
-    fun insere(json: String): String {
-        val endereco = "http://192.168.15.17:8080/api/aluno"
-        return post(endereco, json)
-    }
-
     private fun post(endereco: String, json: String): String {
         try{
             val url = URL(endereco)
