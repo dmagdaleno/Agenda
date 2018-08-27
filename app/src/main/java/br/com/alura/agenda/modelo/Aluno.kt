@@ -9,10 +9,4 @@ data class Aluno (
     val telefone: String,
     val site: String,
     val nota: Double,
-    val foto: String?): Serializable {
-
-    override fun toString(): String {
-        return "Aluno(id=$id, nome='$nome', endereco='$endereco', telefone='$telefone', site='$site', nota=$nota, foto=$foto)"
-    }
-
-}
+    val foto: String?): Serializable
