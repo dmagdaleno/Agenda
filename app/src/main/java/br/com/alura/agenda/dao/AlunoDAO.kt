@@ -36,12 +36,14 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db?.execSQL(sql)
     }
 
-    fun insere(aluno: Aluno) {
+    fun insere(aluno: Aluno): Aluno {
         val db = writableDatabase
 
         val dados = pegaDadosDoAluno(aluno)
 
-        db.insert("Alunos", null, dados)
+        val id = db.insert("Alunos", null, dados)
+
+        return aluno.copy(id = id)
     }
 
     fun buscaAlunos(): List<Aluno> {
@@ -74,13 +76,15 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db.delete("Alunos", "id = ?", params)
     }
 
-    fun altera(id: Long, aluno: Aluno) {
+    fun altera(id: Long, aluno: Aluno): Aluno {
         val db = writableDatabase
 
         val dados = pegaDadosDoAluno(aluno)
 
         val params = arrayOf(id.toString())
         db.update("Alunos", dados, "id = ?", params)
+
+        return aluno.copy(id = id)
     }
 
     fun existeAlunoCom(telefone: String): Boolean {
