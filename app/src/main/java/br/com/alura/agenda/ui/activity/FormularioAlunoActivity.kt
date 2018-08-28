@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -90,14 +91,16 @@ class FormularioAlunoActivity : AppCompatActivity() {
     fun salvaAluno() {
         val aluno: Aluno = constroiAluno()
         val dao = AlunoDAO(this)
-        if (aluno.id != null)  {
-            dao.altera(aluno.id, aluno)
-        } else {
-            dao.insere(aluno)
-        }
+        val alunoSalvo =
+            if (aluno.id != null)
+                dao.altera(aluno.id, aluno)
+            else
+                dao.insere(aluno)
+
         dao.close()
 
-        val call = RetrofitInicializador().alunoService.insere(aluno)
+        Log.i("Aluno", "Enviando aluno: ${alunoSalvo}")
+        val call = RetrofitInicializador().alunoService.insere(alunoSalvo)
         call.enqueue(InsereAlunoCallback())
 
         Toast.makeText(this, "Aluno ${aluno.nome} salvo", Toast.LENGTH_SHORT).show()
