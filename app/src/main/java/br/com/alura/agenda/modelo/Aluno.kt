@@ -1,9 +1,10 @@
 package br.com.alura.agenda.modelo
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.Serializable
 
 data class Aluno (
-    val id: Long? = null,
+    @field:JsonProperty("idCliente") val id: Long? = null,
     val nome: String,
     val endereco: String,
     val telefone: String,
