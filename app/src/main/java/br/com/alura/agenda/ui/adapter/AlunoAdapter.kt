@@ -48,7 +48,7 @@ class AlunoAdapter(
 
     override fun getItem(position: Int) = alunos[position]
 
-    override fun getItemId(position: Int) = alunos[position].id ?: 0
+    override fun getItemId(position: Int) = position.toLong()
 
     override fun getCount() = alunos.size
 }
