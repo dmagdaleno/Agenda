@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
@@ -20,6 +21,7 @@ import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
 import br.com.alura.agenda.ui.adapter.AlunoAdapter
 import kotlinx.android.synthetic.main.activity_lista_aluno.*
+import java.util.*
 
 class ListaAlunoActivity : AppCompatActivity() {
 
@@ -47,6 +49,9 @@ class ListaAlunoActivity : AppCompatActivity() {
     private fun carregaListaAlunos() {
         val dao = AlunoDAO(this)
         val alunos = dao.buscaAlunos()
+        alunos.forEach { aluno ->
+            Log.d("Aluno[${aluno.id}]", aluno.toString())
+        }
         dao.close ()
 
         val adapter = AlunoAdapter(this, alunos)
