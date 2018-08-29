@@ -120,7 +120,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     fun remover(aluno: Aluno) {
         val db = writableDatabase
 
-        val params = arrayOf(aluno.id.toString())
+        val params = arrayOf(aluno.id)
         db.delete("Alunos", "id = ?", params)
     }
 
