@@ -15,9 +15,11 @@ import br.com.alura.agenda.dao.AlunoDAO
 import br.com.alura.agenda.funcoes.carregaFoto
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
-import br.com.alura.agenda.retrofit.InsereAlunoCallback
 import br.com.alura.agenda.retrofit.RetrofitInicializador
 import kotlinx.android.synthetic.main.activity_formulario_aluno.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 
 class FormularioAlunoActivity : AppCompatActivity() {
@@ -101,7 +103,15 @@ class FormularioAlunoActivity : AppCompatActivity() {
 
         Log.i("Aluno", "Enviando aluno: ${alunoSalvo}")
         val call = RetrofitInicializador().alunoService.insere(alunoSalvo)
-        call.enqueue(InsereAlunoCallback())
+        call.enqueue(object: Callback<Unit> {
+            override fun onResponse(call: Call<Unit>?, response: Response<Unit>?) {
+                Log.i("Sucesso", "Requisição realizada com sucesso")
+            }
+
+            override fun onFailure(call: Call<Unit>?, t: Throwable?) {
+                Log.e("Falha", "Falha na requisição", t)
+            }
+        })
 
         Toast.makeText(this, "Aluno ${aluno.nome} salvo", Toast.LENGTH_SHORT).show()
         finish()
