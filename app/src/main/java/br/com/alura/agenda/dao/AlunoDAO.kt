@@ -11,12 +11,12 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
     companion object {
         private val DB_NAME = "Agenda"
-        private val DB_VERSION = 3
+        private val DB_VERSION = 4
     }
 
     override fun onCreate(db: SQLiteDatabase) {
         val sql = "CREATE TABLE Alunos (" +
-                    "id INTEGER PRIMARY KEY, " +
+                    "id CHAR(36) PRIMARY KEY, " +
                     "nome TEXT NOT NULL, " +
                     "endereco TEXT, " +
                     "telefone TEXT, " +
@@ -31,6 +31,9 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             1,2 -> {
                 val sql = "ALTER TABLE Alunos ADD COLUMN foto TEXT"
                 db.execSQL(sql)
+            }
+            3 -> {
+
             }
         }
     }
