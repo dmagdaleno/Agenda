@@ -101,7 +101,7 @@ class FormularioAlunoActivity : AppCompatActivity() {
 
         dao.close()
 
-        Log.i("Aluno", "Enviando aluno: ${alunoSalvo}")
+        Log.d("Aluno", "Enviando aluno: ${alunoSalvo}")
         val call = RetrofitInicializador().alunoService.insere(alunoSalvo)
         call.enqueue(object: Callback<Unit> {
             override fun onResponse(call: Call<Unit>?, response: Response<Unit>?) {
