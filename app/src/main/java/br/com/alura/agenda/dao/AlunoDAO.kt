@@ -33,7 +33,28 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                 db.execSQL(sql)
             }
             3 -> {
+                val criaTabelaTemporaria = "CREATE TABLE Alunos_tmp (" +
+                        "id CHAR(36) PRIMARY KEY, " +
+                        "nome TEXT NOT NULL, " +
+                        "endereco TEXT, " +
+                        "telefone TEXT, " +
+                        "site TEXT, " +
+                        "nota REAL, " +
+                        "foto TEXT);"
+                db.execSQL(criaTabelaTemporaria)
 
+                val copiaTabelaAlunosParaTabelaTemporaria =
+                        "INSERT INTO Alunos_tmp " +
+                            "(id, nome, endereco, telefone, site, nota, foto) "+
+                            "SELECT id, nome, endereco, telefone, site, nota, foto " +
+                            "FROM Alunos"
+                db.execSQL(copiaTabelaAlunosParaTabelaTemporaria)
+
+                val removeTabelaAntiga = "DROP TABLE Alunos"
+                db.execSQL(removeTabelaAntiga)
+
+                val renomeiaTabelaTemporaria = "ALTER TABLE Alunos_tmp RENAME TO Alunos"
+                db.execSQL(renomeiaTabelaTemporaria)
             }
         }
     }
