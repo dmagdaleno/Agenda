@@ -21,7 +21,6 @@ import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
 import br.com.alura.agenda.ui.adapter.AlunoAdapter
 import kotlinx.android.synthetic.main.activity_lista_aluno.*
-import java.util.*
 
 class ListaAlunoActivity : AppCompatActivity() {
 
