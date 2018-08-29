@@ -12,12 +12,12 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
     companion object {
         private val DB_NAME = "Agenda"
-        private val DB_VERSION = 5
+        private val DB_VERSION = 6
     }
 
     override fun onCreate(db: SQLiteDatabase) {
         val sql = "CREATE TABLE Alunos (" +
-                    "id CHAR(36) PRIMARY KEY, " +
+                    "id CHAR(36) PRIMARY KEY NOT NULL, " +
                     "nome TEXT NOT NULL, " +
                     "endereco TEXT, " +
                     "telefone TEXT, " +
@@ -36,7 +36,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             3 -> {
                 val criaTabelaTemporaria =
                         "CREATE TABLE Alunos_tmp (" +
-                            "id CHAR(36) PRIMARY KEY, " +
+                            "id CHAR(36) PRIMARY KEY NOT NULL, " +
                             "nome TEXT NOT NULL, " +
                             "endereco TEXT, " +
                             "telefone TEXT, " +
@@ -67,6 +67,10 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                 alunos.forEach { aluno ->
                     db.execSQL(update, arrayOf(geraUUID(), aluno.id))
                 }
+            }
+            5 -> {
+                val delete = "DELETE FROM Alunos WHERE id = null"
+                db.execSQL(delete)
             }
         }
     }
