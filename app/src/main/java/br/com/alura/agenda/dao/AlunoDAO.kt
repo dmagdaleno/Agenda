@@ -26,14 +26,13 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         db?.execSQL(sql)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        val sql: String =
-            when(oldVersion){
-                2,3 -> "ALTER TABLE Alunos ADD COLUMN foto TEXT"
-                else -> ""
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        when(oldVersion){
+            1,2 -> {
+                val sql = "ALTER TABLE Alunos ADD COLUMN foto TEXT"
+                db.execSQL(sql)
             }
-
-        db?.execSQL(sql)
+        }
     }
 
     fun insere(aluno: Aluno): Aluno {
