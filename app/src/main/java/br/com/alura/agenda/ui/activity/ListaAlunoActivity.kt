@@ -19,8 +19,13 @@ import br.com.alura.agenda.api.EnviaAlunoTask
 import br.com.alura.agenda.dao.AlunoDAO
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
+import br.com.alura.agenda.retrofit.RetrofitInicializador
+import br.com.alura.agenda.retrofit.service.dto.ListaAlunoDTO
 import br.com.alura.agenda.ui.adapter.AlunoAdapter
 import kotlinx.android.synthetic.main.activity_lista_aluno.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ListaAlunoActivity : AppCompatActivity() {
 
@@ -42,7 +47,26 @@ class ListaAlunoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        carregaListaAlunos()
+
+        val call = RetrofitInicializador().alunoService.lista()
+        call.enqueue(object: Callback<ListaAlunoDTO> {
+            override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
+                val alunos = response?.body()?.alunos
+                if(alunos != null && alunos.isNotEmpty()) {
+                    val dao = AlunoDAO(this@ListaAlunoActivity)
+                    dao.sincroniza(alunos)
+                    dao.close()
+                }
+                carregaListaAlunos()
+            }
+
+            override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
+                Log.e("Erro", "Erro ao recuperar alunos", t)
+                carregaListaAlunos()
+            }
+
+        })
+
     }
 
     private fun carregaListaAlunos() {
