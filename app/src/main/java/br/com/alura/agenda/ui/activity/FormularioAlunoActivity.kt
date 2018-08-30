@@ -16,6 +16,7 @@ import br.com.alura.agenda.funcoes.carregaFoto
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
 import br.com.alura.agenda.retrofit.RetrofitInicializador
+import br.com.alura.agenda.retrofit.service.dto.ListaAlunoDTO
 import kotlinx.android.synthetic.main.activity_formulario_aluno.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -103,12 +104,12 @@ class FormularioAlunoActivity : AppCompatActivity() {
 
         Log.d("Aluno", "Enviando aluno: ${alunoSalvo}")
         val call = RetrofitInicializador().alunoService.insere(alunoSalvo)
-        call.enqueue(object: Callback<Unit> {
-            override fun onResponse(call: Call<Unit>?, response: Response<Unit>?) {
+        call.enqueue(object: Callback<ListaAlunoDTO> {
+            override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
                 Log.i("Sucesso", "Requisição realizada com sucesso")
             }
 
-            override fun onFailure(call: Call<Unit>?, t: Throwable?) {
+            override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
                 Log.e("Falha", "Falha na requisição", t)
             }
         })
