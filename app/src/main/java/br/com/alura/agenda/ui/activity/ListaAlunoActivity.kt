@@ -72,9 +72,9 @@ class ListaAlunoActivity : AppCompatActivity() {
     private fun carregaListaAlunos() {
         val dao = AlunoDAO(this)
         val alunos = dao.buscaAlunos()
-        alunos.forEach { aluno ->
-            Log.d("Aluno[${aluno.id}]", aluno.toString())
-        }
+
+        Log.d("Alunos", alunos.joinToString())
+
         dao.close ()
 
         val adapter = AlunoAdapter(this, alunos)
