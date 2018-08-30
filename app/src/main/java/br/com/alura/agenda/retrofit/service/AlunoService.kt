@@ -10,7 +10,7 @@ import retrofit2.http.POST
 interface AlunoService {
 
     @POST("aluno")
-    fun insere(@Body aluno: Aluno): Call<Unit>
+    fun insere(@Body aluno: Aluno): Call<ListaAlunoDTO>
 
     @GET("aluno")
     fun lista(): Call<ListaAlunoDTO>
