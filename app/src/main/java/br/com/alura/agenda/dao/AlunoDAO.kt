@@ -137,10 +137,18 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
     fun existeAlunoCom(telefone: String): Boolean {
         val db = readableDatabase
-        val c = db.rawQuery("SELECT * FROM Alunos WHERE telefone = ?", arrayOf(telefone))
-        val resultados = c.count
+        val c = db.rawQuery("SELECT id FROM Alunos WHERE telefone = ?", arrayOf(telefone))
+        val quantidade = c.count
         c.close()
-        return resultados > 0
+        return quantidade > 0
+    }
+
+    fun existe(aluno: Aluno): Boolean {
+        val db = readableDatabase
+        val c = db.rawQuery("SELECT id FROM Alunos WHERE id = ?", arrayOf(aluno.id))
+        val quantidade = c.count
+        c.close()
+        return quantidade > 0
     }
 
     private fun pegaDadosDoAluno(id: String, aluno: Aluno): ContentValues {
@@ -153,5 +161,15 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         dados.put("nota", aluno.nota)
         dados.put("foto", aluno.foto)
         return dados
+    }
+
+    fun sincroniza(alunos: List<Aluno>) {
+        alunos.forEach { aluno ->
+            if(existe(aluno)){
+                altera(aluno.id!!, aluno)
+            } else {
+                insere(aluno)
+            }
+        }
     }
 }
