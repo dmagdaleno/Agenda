@@ -1,6 +1,6 @@
 package br.com.alura.agenda.funcoes
 
-fun <T> Collection<T>.joinToString(
+fun <T> Collection<T>.collectionToString(
         separador: String = ", ",
         prefixo: String = "[ ",
         sufixo: String = " ]"
