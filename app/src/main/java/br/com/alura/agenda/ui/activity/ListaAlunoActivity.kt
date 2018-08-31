@@ -17,6 +17,7 @@ import android.widget.AdapterView
 import br.com.alura.agenda.R
 import br.com.alura.agenda.api.EnviaAlunoTask
 import br.com.alura.agenda.dao.AlunoDAO
+import br.com.alura.agenda.funcoes.collectionToString
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
 import br.com.alura.agenda.retrofit.RetrofitInicializador
@@ -73,7 +74,7 @@ class ListaAlunoActivity : AppCompatActivity() {
         val dao = AlunoDAO(this)
         val alunos = dao.buscaAlunos()
 
-        Log.d("Alunos", alunos.joinToString())
+        Log.d("Alunos", alunos.collectionToString())
 
         dao.close ()
 
