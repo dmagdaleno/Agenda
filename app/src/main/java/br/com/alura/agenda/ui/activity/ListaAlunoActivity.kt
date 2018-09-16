@@ -37,6 +37,10 @@ class ListaAlunoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_aluno)
 
+        swipe_lista_aluno.setOnRefreshListener {
+            sincronizaComOServidor()
+        }
+
         listaAluno.setOnItemClickListener { _, _, position, _ ->
             val aluno: Aluno = pegaAlunoDaLista(position)
             abrirFormulario(this, aluno)
@@ -65,11 +69,12 @@ class ListaAlunoActivity : AppCompatActivity() {
                     dao.close()
                 }
                 carregaListaAlunos()
+                swipe_lista_aluno.isRefreshing = false
             }
 
             override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
-                Log.e("Erro", "Erro ao recuperar alunos", t)
-                carregaListaAlunos()
+                Log.e("ListaAluno", "Erro ao recuperar alunos", t)
+                swipe_lista_aluno.isRefreshing = false
             }
         })
     }
