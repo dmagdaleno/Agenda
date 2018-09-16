@@ -44,16 +44,21 @@ class ListaAlunoActivity : AppCompatActivity() {
         botaoSalvar.setOnClickListener { abrirFormulario(this, null) }
 
         registerForContextMenu(listaAluno)
+
+        sincronizaComOServidor()
     }
 
     override fun onResume() {
         super.onResume()
+        carregaListaAlunos()
+    }
 
+    private fun sincronizaComOServidor() {
         val call = RetrofitInicializador().alunoService.lista()
-        call.enqueue(object: Callback<ListaAlunoDTO> {
+        call.enqueue(object : Callback<ListaAlunoDTO> {
             override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
                 val alunos = response?.body()?.alunos
-                if(alunos != null && alunos.isNotEmpty()) {
+                if (alunos != null && alunos.isNotEmpty()) {
                     val dao = AlunoDAO(this@ListaAlunoActivity)
                     dao.sincroniza(alunos)
                     dao.close()
@@ -65,9 +70,7 @@ class ListaAlunoActivity : AppCompatActivity() {
                 Log.e("Erro", "Erro ao recuperar alunos", t)
                 carregaListaAlunos()
             }
-
         })
-
     }
 
     private fun carregaListaAlunos() {
