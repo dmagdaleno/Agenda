@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import br.com.alura.agenda.R
 import br.com.alura.agenda.api.EnviaAlunoTask
 import br.com.alura.agenda.dao.AlunoDAO
@@ -167,14 +168,30 @@ class ListaAlunoActivity : AppCompatActivity() {
         return pegaAlunoDaLista(info.position)
     }
 
-    fun remover(aluno: Aluno): Boolean {
-        val dao = AlunoDAO(this)
-        dao.remover(aluno)
-        dao.close()
+    private fun remover(aluno: Aluno): Boolean {
+        aluno.id?.let {
+            val call = RetrofitInicializador().alunoService.remove(it)
+            call.enqueue(object: Callback<ListaAlunoDTO>{
+                override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
+                    showError("Erro ao remover ${aluno.nome}", t)
+                }
 
-        carregaListaAlunos()
+                override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
+                    val dao = AlunoDAO(this@ListaAlunoActivity)
+                    dao.remover(aluno)
+                    dao.close()
+
+                    carregaListaAlunos()
+                }
+            })
+        }
 
         return false
+    }
+
+    private fun showError(msg: String, t: Throwable?) {
+        Log.e("ListaAluno", msg, t)
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
     fun abrirView(uri: Uri, menuItem: MenuItem): Boolean {
