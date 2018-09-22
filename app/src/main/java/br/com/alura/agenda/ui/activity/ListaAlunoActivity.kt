@@ -18,6 +18,7 @@ import android.widget.Toast
 import br.com.alura.agenda.R
 import br.com.alura.agenda.api.EnviaAlunoTask
 import br.com.alura.agenda.dao.AlunoDAO
+import br.com.alura.agenda.event.AtualizaAlunosEvent
 import br.com.alura.agenda.funcoes.collectionToString
 import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.modelo.RequestCode
@@ -25,6 +26,9 @@ import br.com.alura.agenda.retrofit.RetrofitInicializador
 import br.com.alura.agenda.retrofit.service.dto.ListaAlunoDTO
 import br.com.alura.agenda.ui.adapter.AlunoAdapter
 import kotlinx.android.synthetic.main.activity_lista_aluno.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +40,8 @@ class ListaAlunoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_aluno)
+
+        EventBus.getDefault().register(this)
 
         swipe_lista_aluno.setOnRefreshListener {
             sincronizaComOServidor()
@@ -228,5 +234,10 @@ class ListaAlunoActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if(requestCode == RequestCode.CALL) efetuaLigacao(ultimoTelefone)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventReceived(event: AtualizaAlunosEvent){
+        carregaListaAlunos()
     }
 }
