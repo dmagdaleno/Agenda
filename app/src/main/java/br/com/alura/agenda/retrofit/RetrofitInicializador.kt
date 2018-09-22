@@ -1,6 +1,7 @@
 package br.com.alura.agenda.retrofit
 
 import br.com.alura.agenda.retrofit.service.AlunoService
+import br.com.alura.agenda.retrofit.service.DispositivoService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -12,6 +13,9 @@ class RetrofitInicializador {
 
     val alunoService: AlunoService
         get() = retrofit.create(AlunoService::class.java)
+
+    val dispositivoService: DispositivoService
+        get() = retrofit.create(DispositivoService::class.java)
 
     init {
         val interceptor = HttpLoggingInterceptor()
