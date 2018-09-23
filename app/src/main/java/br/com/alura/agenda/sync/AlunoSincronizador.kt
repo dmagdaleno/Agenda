@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import br.com.alura.agenda.dao.AlunoDAO
 import br.com.alura.agenda.event.AtualizaAlunosEvent
+import br.com.alura.agenda.modelo.Aluno
 import br.com.alura.agenda.preferences.AlunoPreferences
 import br.com.alura.agenda.retrofit.RetrofitInicializador
 import br.com.alura.agenda.retrofit.service.dto.ListaAlunoDTO
@@ -76,5 +77,20 @@ class AlunoSincronizador(val context: Context) {
                 dao.close()
             }
         })
+    }
+
+    fun removeDoServidor(aluno: Aluno) {
+        aluno.id?.let {
+            val call = service.remove(it)
+            call.enqueue(object : Callback<ListaAlunoDTO> {
+                override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
+
+                }
+
+                override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
+                    Log.e("AlunoSincronizador", "Erro ao remover ${aluno.nome}", t)
+                }
+            })
+        }
     }
 }
