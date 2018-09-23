@@ -16,6 +16,7 @@ class AlunoSincronizador(val context: Context) {
 
     private val eventBus = EventBus.getDefault()
     private val preferences = AlunoPreferences(context)
+    private val service = RetrofitInicializador().alunoService
 
     fun sincroniza() {
         if(preferences.existeVersao)
@@ -24,13 +25,14 @@ class AlunoSincronizador(val context: Context) {
             buscaTodos()
     }
 
+
     private fun buscaNovos() {
-        val call = RetrofitInicializador().alunoService.listaNovos(preferences.versao)
+        val call = service.listaNovos(preferences.versao)
         call.enqueue(atualizaAlunos())
     }
 
     private fun buscaTodos(){
-        val call = RetrofitInicializador().alunoService.lista()
+        val call = service.lista()
         call.enqueue(atualizaAlunos())
     }
 
@@ -55,5 +57,24 @@ class AlunoSincronizador(val context: Context) {
             Log.e("AlunoSincronizador", "Erro ao recuperar alunos", t)
             eventBus.post(AtualizaAlunosEvent())
         }
+    }
+
+    fun sincronizaAlunosLocais(){
+        val dao = AlunoDAO(context)
+        val alunosNaoSincronizados = dao.buscaAlunosNaoSincronizados()
+        val call = service.atualiza(alunosNaoSincronizados)
+        call.enqueue(object: Callback<ListaAlunoDTO>{
+            override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
+                response?.body()?.alunos?.let {
+                    dao.sincroniza(it)
+                }
+                dao.close()
+            }
+
+            override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
+                Log.e("AlunoSincronizador", "Erro ao enviar alunos", t)
+                dao.close()
+            }
+        })
     }
 }
