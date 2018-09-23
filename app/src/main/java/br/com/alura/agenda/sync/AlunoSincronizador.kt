@@ -84,7 +84,10 @@ class AlunoSincronizador(val context: Context) {
             val call = service.remove(it)
             call.enqueue(object : Callback<ListaAlunoDTO> {
                 override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
-
+                    val dao = AlunoDAO(context)
+                    dao.remove(aluno)
+                    dao.close()
+                    Log.d("AlunoSincronizador", "Aluno ${aluno.nome} removido com sucesso")
                 }
 
                 override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
