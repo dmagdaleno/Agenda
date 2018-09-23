@@ -189,7 +189,7 @@ class ListaAlunoActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
                     val dao = AlunoDAO(this@ListaAlunoActivity)
-                    dao.remover(aluno)
+                    dao.remove(aluno)
                     dao.close()
 
                     carregaListaAlunos()
