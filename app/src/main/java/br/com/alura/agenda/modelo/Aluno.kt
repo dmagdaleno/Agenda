@@ -20,6 +20,12 @@ data class Aluno (
     val estaDesativado
         get() = desativado == 1
 
-    val estaSincronizado
-        get() = sincronizado == 1
+    val naoEstaSincronizado
+        get() = sincronizado == 0
+
+    fun sincroniza() = if(this.naoEstaSincronizado) {
+            this.copy(sincronizado = 1)
+        } else {
+            this
+        }
 }
