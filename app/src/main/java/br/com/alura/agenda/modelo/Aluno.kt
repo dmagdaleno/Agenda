@@ -12,8 +12,14 @@ data class Aluno (
     val site: String = "undefined",
     val nota: Double = 0.0,
     val foto: String? = null,
-    val desativado: Int = 0): Serializable {
+    val desativado: Int = 0,
+    val sincronizado: Int = 0
+
+): Serializable {
 
     val estaDesativado
         get() = desativado == 1
+
+    val estaSincronizado
+        get() = sincronizado == 1
 }
