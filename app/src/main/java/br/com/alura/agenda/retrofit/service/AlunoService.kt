@@ -18,4 +18,7 @@ interface AlunoService {
 
     @DELETE("aluno/{id}")
     fun remove(@Path("id") id: String): Call<ListaAlunoDTO>
+
+    @PUT("aluno/lista")
+    fun atualiza(@Body alunos: List<Aluno>): Call<ListaAlunoDTO>
 }
