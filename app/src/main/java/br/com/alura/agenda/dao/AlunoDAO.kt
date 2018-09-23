@@ -12,7 +12,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
     companion object {
         private val DB_NAME = "Agenda"
-        private val DB_VERSION = 6
+        private val DB_VERSION = 7
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -23,7 +23,8 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                     "telefone TEXT, " +
                     "site TEXT, " +
                     "nota REAL, " +
-                    "foto TEXT);"
+                    "foto TEXT," +
+                    "sincronizado INT DEFAULT 0);"
         db.execSQL(sql)
     }
 
@@ -72,6 +73,10 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                 val delete = "DELETE FROM Alunos WHERE id = null"
                 db.execSQL(delete)
             }
+            6 -> {
+                val novaColuna = "ALTER TABLE Alunos ADD COLUMN sincronizado DEFAULT 0"
+                db.execSQL(novaColuna)
+            }
         }
     }
 
@@ -115,7 +120,16 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             val site = c.getString(c.getColumnIndex("site"))
             val nota = c.getDouble(c.getColumnIndex("nota"))
             val foto = c.getString(c.getColumnIndex("foto"))
-            val aluno = Aluno(id, nome, endereco, telefone, site, nota, foto)
+            val sincronizado = c.getInt(c.getColumnIndex("sincronizado"))
+            val aluno = Aluno(
+                    id = id,
+                    nome = nome,
+                    endereco = endereco,
+                    telefone = telefone,
+                    site = site,
+                    nota = nota,
+                    foto = foto,
+                    sincronizado = sincronizado)
             alunos.add(aluno)
         }
         return alunos
@@ -164,6 +178,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         dados.put("site", aluno.site)
         dados.put("nota", aluno.nota)
         dados.put("foto", aluno.foto)
+        dados.put("sincronizado", aluno.sincronizado)
         return dados
     }
 
