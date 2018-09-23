@@ -11,8 +11,8 @@ import java.util.*
 class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     companion object {
-        private val DB_NAME = "Agenda"
-        private val DB_VERSION = 7
+        private const val DB_NAME = "Agenda"
+        private const val DB_VERSION = 7
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -110,6 +110,16 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
     }
 
+    fun buscaAlunosNaoSincronizados(): List<Aluno> {
+        val sql = "SELECT * FROM Alunos WHERE sincronizado = 0;"
+        val db = readableDatabase
+        val cursor = db.rawQuery(sql, null)
+        val alunos = populaAlunos(cursor)
+        cursor.close()
+
+        return alunos
+    }
+
     private fun populaAlunos(c: Cursor): ArrayList<Aluno> {
         val alunos = ArrayList<Aluno>()
         while (c.moveToNext()) {
@@ -147,7 +157,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
         val dados = pegaDadosDoAluno(id, aluno)
 
-        val params = arrayOf(id.toString())
+        val params = arrayOf(id)
         db.update("Alunos", dados, "id = ?", params)
 
         return aluno
@@ -161,7 +171,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         return quantidade > 0
     }
 
-    fun existe(aluno: Aluno): Boolean {
+    private fun existe(aluno: Aluno): Boolean {
         val db = readableDatabase
         val c = db.rawQuery("SELECT id FROM Alunos WHERE id = ?", arrayOf(aluno.id))
         val quantidade = c.count
@@ -183,12 +193,17 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     }
 
     fun sincroniza(alunos: List<Aluno>) {
-        alunos.forEach { aluno ->
-            if(existe(aluno))
-                atualiza(aluno)
-            else
-                insere(aluno)
+        alunos.map {
+            val aluno = it.sincroniza()
+            insereOuAtualiza(aluno)
         }
+    }
+
+    private fun insereOuAtualiza(aluno: Aluno) {
+        if (existe(aluno))
+            atualiza(aluno)
+        else
+            insere(aluno)
     }
 
     private fun atualiza(aluno: Aluno) {
