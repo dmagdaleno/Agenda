@@ -166,22 +166,12 @@ class ListaAlunoActivity : AppCompatActivity() {
     }
 
     private fun remover(aluno: Aluno): Boolean {
-        aluno.id?.let {
-            val call = RetrofitInicializador().alunoService.remove(it)
-            call.enqueue(object: Callback<ListaAlunoDTO>{
-                override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
-                    showError("Erro ao remover ${aluno.nome}", t)
-                }
+        val dao = AlunoDAO(this@ListaAlunoActivity)
+        dao.remove(aluno)
+        dao.close()
 
-                override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
-                    val dao = AlunoDAO(this@ListaAlunoActivity)
-                    dao.remove(aluno)
-                    dao.close()
-
-                    carregaListaAlunos()
-                }
-            })
-        }
+        sincronizador.removeDoServidor(aluno)
+        carregaListaAlunos()
 
         return false
     }
