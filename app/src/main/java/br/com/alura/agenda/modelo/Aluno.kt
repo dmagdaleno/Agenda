@@ -28,4 +28,10 @@ data class Aluno (
         } else {
             this
         }
+
+    fun desativa() = if(this.estaDesativado) {
+        this
+    } else {
+        this.copy(desativado = 1, sincronizado = 0)
+    }
 }
