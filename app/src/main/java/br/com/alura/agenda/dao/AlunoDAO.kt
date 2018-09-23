@@ -12,7 +12,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
     companion object {
         private const val DB_NAME = "Agenda"
-        private const val DB_VERSION = 7
+        private const val DB_VERSION = 8
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -24,7 +24,9 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                     "site TEXT, " +
                     "nota REAL, " +
                     "foto TEXT," +
-                    "sincronizado INT DEFAULT 0);"
+                    "sincronizado INT DEFAULT 0," +
+                    "desativado INT DEFAULT 0" +
+                  ");"
         db.execSQL(sql)
     }
 
@@ -77,6 +79,10 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                 val novaColuna = "ALTER TABLE Alunos ADD COLUMN sincronizado DEFAULT 0"
                 db.execSQL(novaColuna)
             }
+            7 -> {
+                val novaColuna = "ALTER TABLE Alunos ADD COLUMN desativado DEFAULT 0"
+                db.execSQL(novaColuna)
+            }
         }
     }
 
@@ -100,7 +106,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     }
 
     fun buscaAlunos(): List<Aluno> {
-        val sql = "SELECT * FROM Alunos;"
+        val sql = "SELECT * FROM Alunos WHERE desativado = 0;"
         val db = readableDatabase
         val cursor = db.rawQuery(sql, null)
         val alunos = populaAlunos(cursor)
@@ -131,6 +137,8 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
             val nota = c.getDouble(c.getColumnIndex("nota"))
             val foto = c.getString(c.getColumnIndex("foto"))
             val sincronizado = c.getInt(c.getColumnIndex("sincronizado"))
+            val desativado = c.getInt(c.getColumnIndex("desativado"))
+
             val aluno = Aluno(
                     id = id,
                     nome = nome,
@@ -139,17 +147,29 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
                     site = site,
                     nota = nota,
                     foto = foto,
+                    desativado = desativado,
                     sincronizado = sincronizado)
+
             alunos.add(aluno)
         }
         return alunos
     }
 
     fun remove(aluno: Aluno) {
-        val db = writableDatabase
+        if(aluno.id != null) {
+            val db = writableDatabase
 
-        val params = arrayOf(aluno.id)
-        db.delete("Alunos", "id = ?", params)
+            val params = arrayOf(aluno.id)
+
+            if(aluno.estaDesativado) {
+                db.delete("Alunos", "id = ?", params)
+            }
+            else {
+                val alunoDesativado = aluno.desativa()
+                altera(aluno.id, alunoDesativado)
+            }
+        }
+
     }
 
     fun altera(id: String, aluno: Aluno): Aluno {
@@ -188,6 +208,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         dados.put("site", aluno.site)
         dados.put("nota", aluno.nota)
         dados.put("foto", aluno.foto)
+        dados.put("desativado", aluno.desativado)
         dados.put("sincronizado", aluno.sincronizado)
         return dados
     }
