@@ -13,6 +13,9 @@ interface AlunoService {
     @GET("aluno")
     fun lista(): Call<ListaAlunoDTO>
 
+    @GET("aluno/diff")
+    fun listaNovos(@Header("datahora") versao: String): Call<ListaAlunoDTO>
+
     @DELETE("aluno/{id}")
     fun remove(@Path("id") id: String): Call<ListaAlunoDTO>
 }
