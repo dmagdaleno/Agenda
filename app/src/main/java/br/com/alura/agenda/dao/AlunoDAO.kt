@@ -80,12 +80,16 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
     }
 
     fun insere(aluno: Aluno): Aluno {
-        val db = writableDatabase
+        var id: String? = null
 
-        val id: String = if(aluno.id == null) geraUUID() else aluno.id
-        val dados = pegaDadosDoAluno(id, aluno)
+        if(!aluno.estaDesativado){
+            val db = writableDatabase
 
-        db.insert("Alunos", null, dados)
+            id = aluno.id ?: geraUUID()
+            val dados = pegaDadosDoAluno(id, aluno)
+
+            db.insert("Alunos", null, dados)
+        }
 
         return aluno.copy(id = id)
     }
@@ -117,7 +121,7 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
         return alunos
     }
 
-    fun remover(aluno: Aluno) {
+    fun remove(aluno: Aluno) {
         val db = writableDatabase
 
         val params = arrayOf(aluno.id)
@@ -165,11 +169,17 @@ class AlunoDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VE
 
     fun sincroniza(alunos: List<Aluno>) {
         alunos.forEach { aluno ->
-            if(existe(aluno)){
-                altera(aluno.id!!, aluno)
-            } else {
+            if(existe(aluno))
+                atualiza(aluno)
+            else
                 insere(aluno)
-            }
         }
+    }
+
+    private fun atualiza(aluno: Aluno) {
+        if (aluno.estaDesativado)
+            remove(aluno)
+        else
+            altera(aluno.id!!, aluno)
     }
 }
