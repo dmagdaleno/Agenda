@@ -36,7 +36,7 @@ class ListaProvaActivity : AppCompatActivity() {
             val provaFragment = ProvaFragment()
             val parametros = Bundle()
             parametros.putSerializable("prova", prova)
-            provaFragment.setArguments(parametros)
+            provaFragment.arguments = parametros
 
             tx.replace(R.id.frame_principal, provaFragment)
             tx.addToBackStack(null)
