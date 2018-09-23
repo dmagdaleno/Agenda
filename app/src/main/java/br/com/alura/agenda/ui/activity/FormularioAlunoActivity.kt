@@ -126,7 +126,8 @@ class FormularioAlunoActivity : AppCompatActivity() {
             site = site.text.toString(),
             nota = nota.progress.toDouble(),
             foto = getImageTag(),
-            desativado = 0)
+            desativado = 0,
+            sincronizado = 0)
 
     private fun getImageTag() = if (imgFoto.tag != null) imgFoto.tag as String else null
 
