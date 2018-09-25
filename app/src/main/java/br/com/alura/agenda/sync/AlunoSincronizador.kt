@@ -55,26 +55,32 @@ class AlunoSincronizador(val context: Context) {
     fun sincroniza(listaAlunoDTO: ListaAlunoDTO) {
         val versao = listaAlunoDTO.momentoDaUltimaModificacao
 
-        preferences.salvaVersao(versao)
+        if(temVersaoNova(versao)) {
+            preferences.salvaVersao(versao)
 
-        val alunos = listaAlunoDTO.alunos
-        if (alunos.isNotEmpty()) {
-            val dao = AlunoDAO(context)
-            dao.sincroniza(alunos)
-            dao.close()
+            val alunos = listaAlunoDTO.alunos
+            if (alunos.isNotEmpty()) {
+                val dao = AlunoDAO(context)
+                dao.sincroniza(alunos)
+                dao.close()
+            }
         }
+    }
+
+    private fun temVersaoNova(versao: String): Boolean {
+        return preferences.comparaComVersaoInterna(versao)
     }
 
     private fun sincronizaAlunosLocais(){
         val dao = AlunoDAO(context)
         val alunosNaoSincronizados = dao.buscaAlunosNaoSincronizados()
+        dao.close()
         val call = service.atualiza(alunosNaoSincronizados)
         call.enqueue(object: Callback<ListaAlunoDTO>{
             override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
-                response?.body()?.alunos?.let {
-                    dao.sincroniza(it)
+                response?.body()?.let {
+                    sincroniza(it)
                 }
-                dao.close()
             }
 
             override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
