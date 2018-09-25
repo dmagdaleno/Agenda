@@ -1,6 +1,8 @@
 package br.com.alura.agenda.preferences
 
 import android.content.Context
+import java.text.ParseException
+import java.text.SimpleDateFormat
 
 class AlunoPreferences(val context: Context) {
 
@@ -29,6 +31,22 @@ class AlunoPreferences(val context: Context) {
 
     private fun sharedPreferences() =
             context.getSharedPreferences(CHAVE_PREFERENCES, Context.MODE_PRIVATE)
+
+    fun comparaComVersaoInterna(versaoExterna: String): Boolean {
+        if(!existeVersao)
+            return true
+
+        try{
+            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+            val dataVersaoExterna = format.parse(versaoExterna)
+            val dataVersaoAtual = format.parse(versao)
+            return dataVersaoExterna.after(dataVersaoAtual)
+        } catch(e: ParseException) {
+            e.printStackTrace()
+        }
+
+        return false
+    }
 
 
 }
