@@ -40,16 +40,7 @@ class AlunoSincronizador(val context: Context) {
     private fun atualizaAlunos() = object : Callback<ListaAlunoDTO> {
         override fun onResponse(call: Call<ListaAlunoDTO>?, response: Response<ListaAlunoDTO>?) {
             response?.body()?.let {
-                val versao = it.momentoDaUltimaModificacao
-
-                preferences.salvaVersao(versao)
-
-                val alunos = it.alunos
-                if (alunos.isNotEmpty()) {
-                    val dao = AlunoDAO(context)
-                    dao.sincroniza(alunos)
-                    dao.close()
-                }
+                sincroniza(it)
             }
             eventBus.post(AtualizaAlunosEvent())
             sincronizaAlunosLocais()
@@ -58,6 +49,19 @@ class AlunoSincronizador(val context: Context) {
         override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
             Log.e("AlunoSincronizador", "Erro ao recuperar alunos", t)
             eventBus.post(AtualizaAlunosEvent())
+        }
+    }
+
+    fun sincroniza(listaAlunoDTO: ListaAlunoDTO) {
+        val versao = listaAlunoDTO.momentoDaUltimaModificacao
+
+        preferences.salvaVersao(versao)
+
+        val alunos = listaAlunoDTO.alunos
+        if (alunos.isNotEmpty()) {
+            val dao = AlunoDAO(context)
+            dao.sincroniza(alunos)
+            dao.close()
         }
     }
 
