@@ -68,7 +68,6 @@ class ListaAlunoActivity : AppCompatActivity() {
 
     private fun sincronizaComOServidor() {
         sincronizador.sincroniza()
-        sincronizador.sincronizaAlunosLocais()
     }
 
     private fun carregaListaAlunos() {
