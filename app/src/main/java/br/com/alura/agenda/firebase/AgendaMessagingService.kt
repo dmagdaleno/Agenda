@@ -4,6 +4,7 @@ import android.util.Log
 import br.com.alura.agenda.dao.AlunoDAO
 import br.com.alura.agenda.event.AtualizaAlunosEvent
 import br.com.alura.agenda.retrofit.service.dto.ListaAlunoDTO
+import br.com.alura.agenda.sync.AlunoSincronizador
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -30,15 +31,14 @@ class AgendaMessagingService: FirebaseMessagingService() {
             val alunosDTO = mapper.readValue(json, ListaAlunoDTO::class.java)
 
             if (alunosDTO != null) {
-                salva(alunosDTO)
-                EventBus.getDefault().post(AtualizaAlunosEvent())
+                sincroniza(alunosDTO)
             }
         }
     }
 
-    private fun salva(alunosDTO: ListaAlunoDTO) {
-        val dao = AlunoDAO(this)
-        dao.sincroniza(alunosDTO.alunos)
-        dao.close()
+    private fun sincroniza(alunosDTO: ListaAlunoDTO) {
+        val sync = AlunoSincronizador(this)
+        sync.sincroniza(alunosDTO)
+        EventBus.getDefault().post(AtualizaAlunosEvent())
     }
 }
