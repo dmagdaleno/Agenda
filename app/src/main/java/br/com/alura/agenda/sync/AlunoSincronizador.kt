@@ -52,6 +52,7 @@ class AlunoSincronizador(val context: Context) {
                 }
             }
             eventBus.post(AtualizaAlunosEvent())
+            sincronizaAlunosLocais()
         }
 
         override fun onFailure(call: Call<ListaAlunoDTO>?, t: Throwable?) {
@@ -60,7 +61,7 @@ class AlunoSincronizador(val context: Context) {
         }
     }
 
-    fun sincronizaAlunosLocais(){
+    private fun sincronizaAlunosLocais(){
         val dao = AlunoDAO(context)
         val alunosNaoSincronizados = dao.buscaAlunosNaoSincronizados()
         val call = service.atualiza(alunosNaoSincronizados)
